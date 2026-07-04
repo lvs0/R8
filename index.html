@@ -3,35 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R8 - Ad Scrolling Experience</title>
+    <title>R8 - Premium Ad Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+            --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+            --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
         * {
             font-family: 'Inter', sans-serif;
         }
         
+        h1, h2, h3, .brand-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        body {
+            background: #0a0a0f;
+            overflow-x: hidden;
+        }
+        
         .gradient-bg {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 70%),
+                linear-gradient(180deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
         }
         
         .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .glass-card:active {
+            transform: scale(0.98);
         }
         
         .glow {
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 60px rgba(99, 102, 241, 0.4), 0 0 100px rgba(236, 72, 153, 0.2);
         }
         
-        .pulse-animation {
-            animation: pulse 2s infinite;
+        .text-gradient {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        .border-gradient {
+            position: relative;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(236, 72, 153, 0.3));
+            padding: 1px;
+            border-radius: 1rem;
+        }
+        
+        .border-gradient::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            padding: 1px;
+            background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+            opacity: 0.5;
         }
         
         .scroll-container {
@@ -39,207 +88,337 @@
         }
         
         .ad-frame {
-            transition: all 0.3s ease;
+            transition: transform 200ms var(--ease-out), opacity 200ms var(--ease-out);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .ad-frame.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .ad-frame:hover {
-            transform: scale(1.02);
+            transform: translateY(-4px);
         }
         
         .music-player {
-            transition: all 0.3s ease;
+            transition: transform 200ms var(--ease-out);
         }
         
         .music-player:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+        }
+        
+        .music-player:active {
+            transform: translateY(-4px) scale(0.98);
         }
         
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 6px;
         }
         
         ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
         }
         
         ::-webkit-scrollbar-thumb {
-            background: rgba(99, 102, 241, 0.5);
-            border-radius: 4px;
+            background: linear-gradient(180deg, #818cf8, #c084fc);
+            border-radius: 3px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+        
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -50px) scale(1.1); }
+            50% { transform: translate(-30px, 30px) scale(0.9); }
+            75% { transform: translate(-50px, -30px) scale(1.05); }
+        }
+        
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .stat-card:hover::before {
+            left: 100%;
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .ad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .ad-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .nav-link {
+            position: relative;
+            transition: color 200ms var(--ease-out);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #818cf8, #c084fc);
+            transition: width 200ms var(--ease-out);
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s var(--ease-out);
         }
     </style>
 </head>
 <body class="gradient-bg min-h-screen text-white">
+    <!-- Floating Orbs Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+        <div class="floating-orb w-96 h-96 bg-indigo-500/30 top-20 -left-48"></div>
+        <div class="floating-orb w-80 h-80 bg-purple-500/30 top-1/3 -right-40" style="animation-delay: -5s;"></div>
+        <div class="floating-orb w-72 h-72 bg-pink-500/30 bottom-20 left-1/4" style="animation-delay: -10s;"></div>
+    </div>
+
     <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-card">
+    <header class="fixed top-0 left-0 right-0 z-50 glass-card border-b border-white/5">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                R8
-            </h1>
-            <nav class="flex gap-6">
-                <button onclick="scrollToSection('ads')" class="hover:text-indigo-400 transition-colors">Pubs</button>
-                <button onclick="scrollToSection('music')" class="hover:text-indigo-400 transition-colors">Musique</button>
-                <button onclick="scrollToSection('stats')" class="hover:text-indigo-400 transition-colors">Stats</button>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-xl brand-font">
+                    R8
+                </div>
+                <span class="text-xl font-semibold brand-font">Premium</span>
+            </div>
+            <nav class="flex gap-8">
+                <button onclick="scrollToSection('ads')" class="nav-link text-gray-300 hover:text-white">Pubs</button>
+                <button onclick="scrollToSection('music')" class="nav-link text-gray-300 hover:text-white">Musique</button>
+                <button onclick="scrollToSection('stats')" class="nav-link text-gray-300 hover:text-white">Stats</button>
             </nav>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="min-h-screen flex items-center justify-center pt-20">
-        <div class="text-center">
-            <h2 class="text-5xl font-bold mb-6 bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Expérience Sans Limites
-            </h2>
-            <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                Profitez de votre musique préférée en arrière-plan pendant que vous explorez les pubs. 
-                Une expérience fluide sans interruption Google Ads.
+    <section class="min-h-screen flex items-center justify-center pt-20 relative">
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="inline-block mb-6 px-4 py-2 rounded-full glass-card text-sm text-gray-300">
+                ✨ Nouvelle expérience premium
+            </div>
+            <h1 class="text-6xl md:text-8xl font-black mb-6 brand-font leading-tight">
+                <span class="text-gradient">R8</span> Experience
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
+                Découvrez une nouvelle façon d'explorer les publicités. 
+                Design premium, musique en arrière-plan, et une expérience sans interruption.
             </p>
-            <button onclick="scrollToSection('ads')" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 rounded-full font-semibold transition-all glow">
-                Commencer
-            </button>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button onclick="scrollToSection('ads')" class="btn-primary px-8 py-4 rounded-full font-semibold text-lg glow">
+                    Explorer les Pubs
+                </button>
+                <button onclick="scrollToSection('music')" class="px-8 py-4 rounded-full font-semibold text-lg glass-card hover:bg-white/10 transition-colors">
+                    Écouter de la Musique
+                </button>
+            </div>
+            
+            <!-- Stats Preview -->
+            <div class="mt-20 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-gradient brand-font">30+</div>
+                    <div class="text-sm text-gray-500 mt-1">Publicités</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-gradient brand-font">∞</div>
+                    <div class="text-sm text-gray-500 mt-1">Musique</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-gradient brand-font">0%</div>
+                    <div class="text-sm text-gray-500 mt-1">Google Ads</div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Ads Section -->
-    <section id="ads" class="min-h-screen py-20 px-6">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold mb-8 text-center">Zone de Publicités</h2>
+    <section id="ads" class="min-h-screen py-20 px-6 relative">
+        <div class="container mx-auto relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl md:text-6xl font-black mb-4 brand-font">
+                    <span class="text-gradient">Publicités</span> Premium
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Explorez notre collection de publicités avec un design exceptionnel
+                </p>
+            </div>
             
             <!-- Auto-scroll Controls -->
-            <div class="glass-card rounded-2xl p-6 mb-8 max-w-2xl mx-auto">
-                <h3 class="text-xl font-semibold mb-4">Contrôles de Défilement Automatique</h3>
-                <div class="flex flex-wrap gap-4 items-center justify-center">
-                    <button id="startScroll" onclick="startAutoScroll()" class="px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
-                        ▶ Démarrer
-                    </button>
-                    <button id="stopScroll" onclick="stopAutoScroll()" class="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors">
-                        ⏹ Arrêter
-                    </button>
-                    <div class="flex items-center gap-2">
-                        <label class="text-sm">Vitesse:</label>
-                        <input type="range" id="scrollSpeed" min="1" max="10" value="3" class="w-32" onchange="updateScrollSpeed()">
-                        <span id="speedValue" class="text-sm">3</span>
+            <div class="glass-card rounded-2xl p-6 mb-12 max-w-3xl mx-auto border-gradient">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2 brand-font">Défilement Intelligent</h3>
+                        <p class="text-sm text-gray-400">Anti-ban activé avec simulation humaine</p>
                     </div>
-                </div>
-                <div class="mt-4 text-sm text-gray-400 text-center">
-                    <p>⚡ Anti-ban activé: Défilement naturel, pauses aléatoires, simulation humaine</p>
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <button id="startScroll" onclick="startAutoScroll()" class="btn-primary px-6 py-3 rounded-xl font-semibold flex items-center gap-2">
+                            <span>▶</span> Démarrer
+                        </button>
+                        <button id="stopScroll" onclick="stopAutoScroll()" class="px-6 py-3 rounded-xl font-semibold glass-card hover:bg-white/10 flex items-center gap-2">
+                            <span>⏹</span> Arrêter
+                        </button>
+                        <div class="flex items-center gap-2 bg-white/5 rounded-xl px-4 py-2">
+                            <span class="text-sm text-gray-400">Vitesse:</span>
+                            <input type="range" id="scrollSpeed" min="1" max="10" value="3" class="w-24 accent-indigo-500" onchange="updateScrollSpeed()">
+                            <span id="speedValue" class="text-sm font-semibold text-indigo-400 w-6">3</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Ad Container -->
-            <div id="adContainer" class="scroll-container max-w-4xl mx-auto space-y-8 overflow-y-auto" style="max-height: 600px;">
-                <!-- Ad Unit 1 -->
-                <div class="ad-frame glass-card rounded-2xl p-6">
-                    <div class="text-sm text-gray-400 mb-2">Publicité #1</div>
-                    <div id="frame" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
-                        <iframe data-aa='2446746' src='https://acceptable.a-ads.com/2446746?size=728x90'
-                            style='border:0; padding:0; width:728px; height:90px; overflow:hidden;display: block;margin: auto' 
-                            sandbox='allow-scripts allow-same-origin'></iframe>
-                    </div>
-                </div>
-
-                <!-- Ad Unit 2 -->
-                <div class="ad-frame glass-card rounded-2xl p-6">
-                    <div class="text-sm text-gray-400 mb-2">Publicité #2</div>
-                    <div id="frame2" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
-                        <iframe data-aa='2446746' src='https://acceptable.a-ads.com/2446746?size=300x250'
-                            style='border:0; padding:0; width:300px; height:250px; overflow:hidden;display: block;margin: auto'
-                            sandbox='allow-scripts allow-same-origin'></iframe>
-                    </div>
-                </div>
-
-                <!-- Ad Unit 3 -->
-                <div class="ad-frame glass-card rounded-2xl p-6">
-                    <div class="text-sm text-gray-400 mb-2">Publicité #3</div>
-                    <div id="frame3" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
-                        <iframe data-aa='2446746' src='https://acceptable.a-ads.com/2446746?size=160x600'
-                            style='border:0; padding:0; width:160px; height:600px; overflow:hidden;display: block;margin: auto'
-                            sandbox='allow-scripts allow-same-origin'></iframe>
-                    </div>
-                </div>
-
-                <!-- Ad Unit 4 -->
-                <div class="ad-frame glass-card rounded-2xl p-6">
-                    <div class="text-sm text-gray-400 mb-2">Publicité #4</div>
-                    <div id="frame4" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
-                        <iframe data-aa='2446746' src='https://acceptable.a-ads.com/2446746?size=336x280'
-                            style='border:0; padding:0; width:336px; height:280px; overflow:hidden;display: block;margin: auto'
-                            sandbox='allow-scripts allow-same-origin'></iframe>
-                    </div>
-                </div>
-
-                <!-- Ad Unit 5 -->
-                <div class="ad-frame glass-card rounded-2xl p-6">
-                    <div class="text-sm text-gray-400 mb-2">Publicité #5</div>
-                    <div id="frame5" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
-                        <iframe data-aa='2446746' src='https://acceptable.a-ads.com/2446746?size=300x600'
-                            style='border:0; padding:0; width:300px; height:600px; overflow:hidden;display: block;margin: auto'
-                            sandbox='allow-scripts allow-same-origin'></iframe>
-                    </div>
+            <!-- Ad Grid Container -->
+            <div id="adContainer" class="scroll-container max-w-7xl mx-auto overflow-y-auto" style="max-height: 70vh;">
+                <div class="ad-grid" id="adGrid">
+                    <!-- Ad Units will be generated by JavaScript -->
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Music Section -->
-    <section id="music" class="min-h-screen py-20 px-6">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold mb-8 text-center">Musique en Arrière-plan</h2>
+    <section id="music" class="min-h-screen py-20 px-6 relative">
+        <div class="container mx-auto relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl md:text-6xl font-black mb-4 brand-font">
+                    <span class="text-gradient">Musique</span> Illimitée
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Profitez de votre musique préférée pendant que vous explorez
+                </p>
+            </div>
             
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                 <!-- YouTube Music -->
-                <div class="music-player glass-card rounded-2xl p-6">
-                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                        <span class="text-red-500">▶</span> YouTube Music
-                    </h3>
+                <div class="music-player glass-card rounded-3xl p-8 border-gradient">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
+                            <span class="text-red-500 text-2xl">▶</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold brand-font">YouTube Music</h3>
+                            <p class="text-sm text-gray-400">Streaming illimité</p>
+                        </div>
+                    </div>
                     <div class="mb-4">
                         <input type="text" id="youtubeUrl" placeholder="Collez l'URL YouTube ici..." 
-                            class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-indigo-500">
+                            class="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-indigo-500 focus:bg-white/10 transition-all">
                     </div>
-                    <button onclick="playYouTube()" class="w-full px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg transition-colors mb-4">
-                        Lire YouTube
+                    <button onclick="playYouTube()" class="w-full px-6 py-4 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 rounded-2xl font-semibold transition-all mb-6 flex items-center justify-center gap-2">
+                        <span>▶</span> Lire sur YouTube
                     </button>
-                    <div id="youtubePlayer" class="aspect-video bg-black/50 rounded-lg flex items-center justify-center">
-                        <p class="text-gray-400">Lecteur YouTube</p>
+                    <div id="youtubePlayer" class="aspect-video bg-black/30 rounded-2xl flex items-center justify-center overflow-hidden">
+                        <p class="text-gray-500">Lecteur YouTube</p>
                     </div>
                 </div>
 
                 <!-- Spotify -->
-                <div class="music-player glass-card rounded-2xl p-6">
-                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                        <span class="text-green-500">♫</span> Spotify
-                    </h3>
+                <div class="music-player glass-card rounded-3xl p-8 border-gradient">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                            <span class="text-green-500 text-2xl">♫</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold brand-font">Spotify</h3>
+                            <p class="text-sm text-gray-400">Playlists premium</p>
+                        </div>
+                    </div>
                     <div class="mb-4">
                         <input type="text" id="spotifyUrl" placeholder="Collez l'URL Spotify ici..." 
-                            class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-indigo-500">
+                            class="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:border-indigo-500 focus:bg-white/10 transition-all">
                     </div>
-                    <button onclick="playSpotify()" class="w-full px-6 py-3 bg-green-600 hover:bg-green-700 rounded-lg transition-colors mb-4">
-                        Lire Spotify
+                    <button onclick="playSpotify()" class="w-full px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-2xl font-semibold transition-all mb-6 flex items-center justify-center gap-2">
+                        <span>♫</span> Lire sur Spotify
                     </button>
-                    <div id="spotifyPlayer" class="aspect-video bg-black/50 rounded-lg flex items-center justify-center">
-                        <p class="text-gray-400">Lecteur Spotify</p>
+                    <div id="spotifyPlayer" class="aspect-video bg-black/30 rounded-2xl flex items-center justify-center overflow-hidden">
+                        <p class="text-gray-500">Lecteur Spotify</p>
                     </div>
                 </div>
             </div>
 
             <!-- Quick Play Suggestions -->
-            <div class="mt-12 max-w-4xl mx-auto">
-                <h3 class="text-2xl font-semibold mb-6 text-center">Suggestions Rapides</h3>
+            <div class="mt-16 max-w-5xl mx-auto">
+                <h3 class="text-2xl font-semibold mb-8 text-center brand-font">Suggestions Rapides</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <button onclick="quickPlay('lofi')" class="glass-card rounded-xl p-4 hover:bg-white/10 transition-colors">
-                        <div class="text-2xl mb-2">🎵</div>
-                        <div class="text-sm">Lofi Beats</div>
+                    <button onclick="quickPlay('lofi')" class="glass-card rounded-2xl p-6 hover:bg-white/10 transition-all group">
+                        <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🎵</div>
+                        <div class="font-semibold brand-font">Lofi Beats</div>
+                        <div class="text-xs text-gray-500 mt-1">Détente</div>
                     </button>
-                    <button onclick="quickPlay('chill')" class="glass-card rounded-xl p-4 hover:bg-white/10 transition-colors">
-                        <div class="text-2xl mb-2">🌊</div>
-                        <div class="text-sm">Chill Vibes</div>
+                    <button onclick="quickPlay('chill')" class="glass-card rounded-2xl p-6 hover:bg-white/10 transition-all group">
+                        <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🌊</div>
+                        <div class="font-semibold brand-font">Chill Vibes</div>
+                        <div class="text-xs text-gray-500 mt-1">Ambiance</div>
                     </button>
-                    <button onclick="quickPlay('focus')" class="glass-card rounded-xl p-4 hover:bg-white/10 transition-colors">
-                        <div class="text-2xl mb-2">🎯</div>
-                        <div class="text-sm">Focus Music</div>
+                    <button onclick="quickPlay('focus')" class="glass-card rounded-2xl p-6 hover:bg-white/10 transition-all group">
+                        <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">🎯</div>
+                        <div class="font-semibold brand-font">Focus Music</div>
+                        <div class="text-xs text-gray-500 mt-1">Concentration</div>
                     </button>
-                    <button onclick="quickPlay('energy')" class="glass-card rounded-xl p-4 hover:bg-white/10 transition-colors">
-                        <div class="text-2xl mb-2">⚡</div>
-                        <div class="text-sm">Energy Boost</div>
+                    <button onclick="quickPlay('energy')" class="glass-card rounded-2xl p-6 hover:bg-white/10 transition-all group">
+                        <div class="text-4xl mb-3 group-hover:scale-110 transition-transform">⚡</div>
+                        <div class="font-semibold brand-font">Energy Boost</div>
+                        <div class="text-xs text-gray-500 mt-1">Motivation</div>
                     </button>
                 </div>
             </div>
@@ -247,32 +426,109 @@
     </section>
 
     <!-- Stats Section -->
-    <section id="stats" class="min-h-screen py-20 px-6">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold mb-8 text-center">Statistiques</h2>
+    <section id="stats" class="min-h-screen py-20 px-6 relative">
+        <div class="container mx-auto relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-5xl md:text-6xl font-black mb-4 brand-font">
+                    <span class="text-gradient">Statistiques</span> en Temps Réel
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    Suivez votre progression et vos performances
+                </p>
+            </div>
             
-            <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-                <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-4xl font-bold text-indigo-400 mb-2" id="adsViewed">0</div>
-                    <div class="text-gray-400">Pubs Vues</div>
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="stat-card glass-card rounded-3xl p-8 border-gradient text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-indigo-500/20 flex items-center justify-center">
+                        <span class="text-3xl">👁️</span>
+                    </div>
+                    <div class="text-5xl font-black text-gradient brand-font mb-2" id="adsViewed">0</div>
+                    <div class="text-gray-400 font-medium">Pubs Vues</div>
+                    <div class="text-xs text-gray-500 mt-2">Total accumulé</div>
                 </div>
-                <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-4xl font-bold text-purple-400 mb-2" id="scrollTime">0:00</div>
-                    <div class="text-gray-400">Temps de Défilement</div>
+                
+                <div class="stat-card glass-card rounded-3xl p-8 border-gradient text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-purple-500/20 flex items-center justify-center">
+                        <span class="text-3xl">⏱️</span>
+                    </div>
+                    <div class="text-5xl font-black text-gradient brand-font mb-2" id="scrollTime">0:00</div>
+                    <div class="text-gray-400 font-medium">Temps Actif</div>
+                    <div class="text-xs text-gray-500 mt-2">Session en cours</div>
                 </div>
-                <div class="glass-card rounded-2xl p-6 text-center">
-                    <div class="text-4xl font-bold text-pink-400 mb-2" id="earnings">~0.00</div>
-                    <div class="text-gray-400">Gains Estimés</div>
+                
+                <div class="stat-card glass-card rounded-3xl p-8 border-gradient text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-pink-500/20 flex items-center justify-center">
+                        <span class="text-3xl">💰</span>
+                    </div>
+                    <div class="text-5xl font-black text-gradient brand-font mb-2" id="earnings">~0.00</div>
+                    <div class="text-gray-400 font-medium">Gains Estimés</div>
+                    <div class="text-xs text-gray-500 mt-2">En USD</div>
+                </div>
+            </div>
+            
+            <!-- Progress Ring -->
+            <div class="mt-16 max-w-md mx-auto text-center">
+                <div class="glass-card rounded-3xl p-8 border-gradient">
+                    <h3 class="text-xl font-semibold mb-6 brand-font">Progression Quotidienne</h3>
+                    <div class="relative w-48 h-48 mx-auto">
+                        <svg class="progress-ring w-full h-full" viewBox="0 0 120 120">
+                            <circle
+                                class="text-gray-700"
+                                stroke="currentColor"
+                                stroke-width="8"
+                                fill="transparent"
+                                r="52"
+                                cx="60"
+                                cy="60"
+                            />
+                            <circle
+                                id="progressCircle"
+                                class="progress-ring-circle text-gradient"
+                                stroke="url(#gradient)"
+                                stroke-width="8"
+                                stroke-linecap="round"
+                                fill="transparent"
+                                r="52"
+                                cx="60"
+                                cy="60"
+                                stroke-dasharray="326.73"
+                                stroke-dashoffset="326.73"
+                            />
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#818cf8" />
+                                    <stop offset="50%" stop-color="#c084fc" />
+                                    <stop offset="100%" stop-color="#f472b6" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-3xl font-black brand-font" id="progressPercent">0%</div>
+                                <div class="text-xs text-gray-5 00">Objectif</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="glass-card py-8 px-6 mt-20">
-        <div class="container mx-auto text-center text-gray-400">
-            <p>R8 - Expérience de défilement de pubs optimisée</p>
-            <p class="text-sm mt-2">Sans Google Ads • Musique gratuite • Anti-ban activé</p>
+    <footer class="glass-card border-t border-white/5 py-12 px-6 mt-20 relative z-10">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-xl brand-font">
+                        R8
+                    </div>
+                    <span class="text-xl font-semibold brand-font">Premium Experience</span>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-gray-400">Design premium • Musique illimitée • Anti-ban avancé</p>
+                    <p class="text-sm text-gray-500 mt-2">© 2024 R8. Tous droits réservés.</p>
+                </div>
+            </div>
         </div>
     </footer>
 

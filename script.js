@@ -4,6 +4,8 @@ let scrollSpeed = 3;
 let adsViewed = 0;
 let scrollSeconds = 0;
 let scrollTimer = null;
+const totalAds = 30;
+const dailyGoal = 100;
 
 // Anti-ban techniques
 const antiBanConfig = {
@@ -17,6 +19,48 @@ const antiBanConfig = {
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Generate ad units dynamically
+function generateAdUnits() {
+    const adGrid = document.getElementById('adGrid');
+    const adSizes = [
+        { width: 728, height: 90, label: 'Leaderboard' },
+        { width: 300, height: 250, label: 'Medium Rectangle' },
+        { width: 160, height: 600, label: 'Wide Skyscraper' },
+        { width: 336, height: 280, label: 'Large Rectangle' },
+        { width: 300, height: 600, label: 'Half Page' },
+        { width: 320, height: 100, label: 'Large Mobile Banner' }
+    ];
+    
+    for (let i = 1; i <= totalAds; i++) {
+        const size = adSizes[i % adSizes.length];
+        const adFrame = document.createElement('div');
+        adFrame.className = 'ad-frame glass-card rounded-2xl p-6';
+        adFrame.style.animationDelay = `${i * 50}ms`;
+        
+        adFrame.innerHTML = `
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-sm font-bold text-indigo-400">${i}</span>
+                    <span class="text-sm text-gray-400">${size.label}</span>
+                </div>
+                <span class="text-xs text-gray-500">${size.width}x${size.height}</span>
+            </div>
+            <div class="flex items-center justify-center bg-black/20 rounded-xl overflow-hidden" style="min-height: ${Math.min(size.height, 200)}px;">
+                <iframe data-aa='2446746' src='https://acceptable.a-ads.com/2446746?size=${size.width}x${size.height}'
+                    style='border:0; padding:0; width:${size.width}px; height:${size.height}px; max-width:100%; overflow:hidden;'
+                    sandbox='allow-scripts allow-same-origin'></iframe>
+            </div>
+        `;
+        
+        adGrid.appendChild(adFrame);
+        
+        // Trigger animation after a small delay
+        setTimeout(() => {
+            adFrame.classList.add('visible');
+        }, 100 + (i * 50));
+    }
 }
 
 function startAutoScroll() {
@@ -131,6 +175,14 @@ function updateStats() {
     // Estimated earnings (rough calculation)
     const estimatedEarnings = (adsViewed * 0.001).toFixed(4);
     document.getElementById('earnings').textContent = `~${estimatedEarnings}`;
+    
+    // Update progress ring
+    const progress = Math.min((adsViewed / dailyGoal) * 100, 100);
+    const circle = document.getElementById('progressCircle');
+    const circumference = 326.73;
+    const offset = circumference - (progress / 100) * circumference;
+    circle.style.strokeDashoffset = offset;
+    document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
 }
 
 // Music player functions
@@ -258,6 +310,9 @@ function scrollToSection(sectionId) {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('stopScroll').disabled = true;
     document.getElementById('stopScroll').classList.add('opacity-50');
+    
+    // Generate ad units
+    generateAdUnits();
     
     // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {
